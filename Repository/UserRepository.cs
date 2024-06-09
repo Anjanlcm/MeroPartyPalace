@@ -5,7 +5,7 @@ using System.Data;
 
 namespace MeroPartyPalace.Service
 {
-    public class UserService
+    public class UserRepository
     {
         public bool LoginUser(LoginUser loginUser)
         {
@@ -23,7 +23,6 @@ namespace MeroPartyPalace.Service
                 }
                 else
                 {
-                    isUserAuthenticate = false;
                     return isUserAuthenticate;
                 }
             }

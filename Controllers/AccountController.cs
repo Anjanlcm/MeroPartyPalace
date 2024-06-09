@@ -7,6 +7,7 @@ using System.Data.SqlTypes;
 using Dapper;
 using static Dapper.SqlMapper;
 using System.Web.Http.Results;
+using MeroPartyPalace.Service;
 
 namespace MeroPartyPalace.Controllers
 {
@@ -16,25 +17,17 @@ namespace MeroPartyPalace.Controllers
     {
         [HttpPost]
         [Route("LoginUser")]
-        public bool LoginUser(LoginUser loginUser)
+        public string LoginUser(LoginUser loginUser)
         {
-            bool isUserAuthenticate = false;
-            DynamicParameters dynamicParameters = new DynamicParameters();
-            dynamicParameters.Add("Email", loginUser.UserEmail);
-            dynamicParameters.Add("Password", loginUser.UserPassword);
+            UserRepository userRepository = new UserRepository(); 
+            bool isLoggedIn = userRepository.LoginUser(loginUser);
 
-            using (var connection = new SqlConnection(Constant.ConnectionString))
+            if (isLoggedIn) 
             {
-                var LogIn = connection.Query<LoginUser>("spForInsertUser", dynamicParameters, commandType: CommandType.StoredProcedure).ToList();
-
-                if (LogIn.Count > 0)
-                {
-                    isUserAuthenticate = true;
-                    return isUserAuthenticate;
-                }
-                return isUserAuthenticate;
-
+                return ("Login Successfully");
             }
+
+            return ("Login failed");
             
         }
     }
