@@ -24,6 +24,7 @@ namespace MeroPartyPalace.Service
                 else
                 {
                     return isUserAuthenticate;
+                    //{ this is for checking purpose only}
                 }
             }
 
