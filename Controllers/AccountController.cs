@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using Dapper;
 using static Dapper.SqlMapper;
+using System.Web.Http.Results;
 
 namespace MeroPartyPalace.Controllers
 {
@@ -13,28 +14,29 @@ namespace MeroPartyPalace.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-
+        [HttpPost]
+        [Route("LoginUser")]
         public bool LoginUser(LoginUser loginUser)
         {
             bool isUserAuthenticate = false;
-            DynamicParameters dynamicParameter = new DynamicParameters();
-            dynamicParameter.Add("Email", loginUser.UserEmail);
-            dynamicParameter.Add("Password", loginUser.UserPassword);
+            DynamicParameters dynamicParameters = new DynamicParameters();
+            dynamicParameters.Add("Email", loginUser.UserEmail);
+            dynamicParameters.Add("Password", loginUser.UserPassword);
+
             using (var connection = new SqlConnection(Constant.ConnectionString))
             {
-                var LogIn = connection.Query<LoginUser>("spForInsertUser", dynamicParameter, commandType: CommandType.StoredProcedure).ToList();
-                if(LogIn.Count > 0)
+                var LogIn = connection.Query<LoginUser>("spForInsertUser", dynamicParameters, commandType: CommandType.StoredProcedure).ToList();
+
+                if (LogIn.Count > 0)
                 {
                     isUserAuthenticate = true;
                     return isUserAuthenticate;
                 }
-                else
-                {
-                    isUserAuthenticate = false;
-                    return isUserAuthenticate;
-                }
-            }
+                return isUserAuthenticate;
 
+            }
+            
         }
     }
 }
+ 
