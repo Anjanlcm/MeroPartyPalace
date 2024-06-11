@@ -39,11 +39,21 @@ namespace MeroPartyPalace.Controllers
             return ("Login Unsuccessful");
         }
 
-        [HttpGet]
-        public string GetUser()
+        [HttpPost]
+        public string SignUpUser(SignUpUser signUpUser)
         {
+            UserRepository userRepository = new UserRepository();
 
-            return ("Hello this is get user function");
+           int UserId = userRepository.SignUpUser(signUpUser);
+            if(UserId != null)
+            {
+                return ("Successfully signed up");
+            }
+            else
+            {
+                return ("Error Occured");
+            }
+            
         }
     }
 }
