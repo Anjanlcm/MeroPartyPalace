@@ -8,6 +8,7 @@ using Dapper;
 using static Dapper.SqlMapper;
 using System.Web.Http.Results;
 using MeroPartyPalace.Service;
+using System.Reflection.Metadata.Ecma335;
 
 namespace MeroPartyPalace.Controllers
 {
@@ -54,6 +55,17 @@ namespace MeroPartyPalace.Controllers
                 return ("Error Occured");
             }
             
+        }
+
+        public string ChangePassword(LoginUser loginUser)
+        {
+            UserRepository userRepository = new UserRepository();
+            bool ispasswordChange = userRepository.ChangePassword(loginUser);
+            if (ispasswordChange)
+            {
+                return ("Password Changed");
+            }
+            return ("Error Occured");
         }
     }
 }

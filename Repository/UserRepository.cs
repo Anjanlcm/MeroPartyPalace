@@ -6,6 +6,7 @@ using System.Web.Http;
 using static Dapper.SqlMapper;
 using System.Security.Cryptography;
 using System.Reflection.Metadata;
+using MeroPartyPalace.Constant;
 
 namespace MeroPartyPalace.Service
 {
@@ -85,6 +86,15 @@ namespace MeroPartyPalace.Service
         {
             bool isPasswordChanged = false;
             UserRepository userRepository = new UserRepository();
+            DynamicParameters dynamicParameter = new DynamicParameters();
+            dynamicParameter.Add("Email", loginUser.UserEmail);
+            dynamicParameter.Add("Password", loginUser.UserPassword);
+
+            using (var connection = new SqlConnection(DBConstant.ConnectionString))
+            {
+                var SignUp = connection.Query<SignUpUser>("spForUpdatePassword", dynamicParameter, commandType: CommandType.StoredProcedure).ToList();
+
+            }
             return isPasswordChanged;
         }
         

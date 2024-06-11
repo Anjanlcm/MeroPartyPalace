@@ -1,4 +1,4 @@
-﻿namespace MeroPartyPalace.Model
+﻿namespace MeroPartyPalace.Constant
 {
     public class DBConstant
     {
