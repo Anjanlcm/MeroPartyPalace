@@ -20,15 +20,30 @@ namespace MeroPartyPalace.Controllers
         public string LoginUser(LoginUser loginUser)
         {
             UserRepository userRepository = new UserRepository(); 
+
             bool isLoggedIn = userRepository.LoginUser(loginUser);
 
-            if (isLoggedIn) 
+            if (isLoggedIn)
             {
-                return ("Login Successfully");
+                //return new JsonResult(new { 
+                //    result = "Login Successful",
+                //});
+                string data = "hello this is anjan";
+                return data;
             }
 
-            return ("Login failed");
-            
+            //return new JsonResult(new
+            //{
+            //    result = "Login Unsuccessful",
+            //});
+            return ("Login Unsuccessful");
+        }
+
+        [HttpGet]
+        public string GetUser()
+        {
+
+            return ("Hello this is get user function");
         }
     }
 }

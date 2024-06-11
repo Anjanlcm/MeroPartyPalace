@@ -2,6 +2,6 @@
 {
     public class Constant
     {
-        public static string ConnectionString = "server=ANJAN;Database=meroPartyPalace;Trusted_Connection=True;";
+        public static string ConnectionString = "server=ANJAN;Database=meroPartyPalaceDB;Trusted_Connection=True;";
     }
 }
