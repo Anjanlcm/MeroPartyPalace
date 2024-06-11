@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MeroPartyPalace")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+26cce7e7f25da2f6eee17deb235a3014592b5021")]
 [assembly: System.Reflection.AssemblyProductAttribute("MeroPartyPalace")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MeroPartyPalace")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

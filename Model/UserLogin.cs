@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MeroPartyPalace.Model
 {
-    public class LoginUser
+    public class UserLogin
     {
         public string UserEmail {  get; set; }
 
