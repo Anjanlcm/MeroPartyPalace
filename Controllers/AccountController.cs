@@ -9,6 +9,8 @@ using static Dapper.SqlMapper;
 using System.Web.Http.Results;
 using MeroPartyPalace.Service;
 using System.Reflection.Metadata.Ecma335;
+using MeroPartyPalace.Constant;
+using MeroPartyPalace.Repository;
 
 namespace MeroPartyPalace.Controllers
 {
@@ -18,30 +20,37 @@ namespace MeroPartyPalace.Controllers
     {
         [HttpPost]
         [Route("LoginUser")]
-        public string LoginUser(LoginUser loginUser)
+        public User LoginUser(LoginUser loginUser)
         {
             UserRepository userRepository = new UserRepository(); 
+            User loggedInUser = new User();
+            int UserId = userRepository.LoginUser(loginUser);
+            DynamicParameters   dynamicParameters = new DynamicParameters();
+            dynamicParameters.Add("id", UserId);
 
-            bool isLoggedIn = userRepository.LoginUser(loginUser);
-
-            if (isLoggedIn)
+            if (UserId != 0)
             {
-                //return new JsonResult(new { 
-                //    result = "Login Successful",
-                //});
-                string data = "hello this is anjan";
-                return data;
+                using (var connection = new SqlConnection(DBConstant.ConnectionString))
+                {
+
+                    //return new JsonResult(new { 
+                    //    result = "Login Successful",
+                    //});
+                    loggedInUser = connection.Query<User>("spForGetUserById", dynamicParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();                    
+                    return loggedInUser;
+                }
+                
             }
 
             //return new JsonResult(new
             //{
             //    result = "Login Unsuccessful",
             //});
-            return ("Login Unsuccessful");
+            return loggedInUser;
         }
 
         [HttpPost]
-        public string SignUpUser(SignUpUser signUpUser)
+        public string SignUpUser(User signUpUser)
         {
             UserRepository userRepository = new UserRepository();
 
@@ -56,7 +65,7 @@ namespace MeroPartyPalace.Controllers
             }
             
         }
-
+        [HttpPut]
         public string ChangePassword(LoginUser loginUser)
         {
             UserRepository userRepository = new UserRepository();
@@ -67,6 +76,19 @@ namespace MeroPartyPalace.Controllers
             }
             return ("Error Occured");
         }
+
+        [HttpPatch]
+        public string UpdateUserAccountInfo(User signUpUser)
+        {
+            UserRepository userRepository = new UserRepository();
+            bool ispasswordChange = userRepository.UpdateUser(signUpUser);
+            if (ispasswordChange)
+            {
+                return ("Account Modified");
+            }
+            return ("Error Occured");
+        }
+       
     }
 }
  
