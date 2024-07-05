@@ -7,6 +7,8 @@ using static Dapper.SqlMapper;
 using System.Security.Cryptography;
 using System.Reflection.Metadata;
 using MeroPartyPalace.Constant;
+using System.Net.Mail;
+using System.Net;
 
 namespace MeroPartyPalace.Service
 {
@@ -125,6 +127,49 @@ namespace MeroPartyPalace.Service
                 }
             }
             return success;
+        }
+        //public static string sendOTP(string reciever_email, string username)
+        //{
+        //    string randomcode, messagebody;
+        //    Random rand = new Random();
+        //    randomcode = (rand.Next(100000, 999999)).ToString();
+        //    string sender_email = "shresthabattey@gmail.com";
+        //    string sender_email_application_password = "Battu@0013";
+        //    MailMessage mail = new MailMessage();
+        //    messagebody = "Dear " + username + ",\n\nYour Password Reset code is: " + randomcode;
+        //    try
+        //    {
+        //        mail.To.Add(reciever_email);
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        return "Invalid Email";
+        //    }
+        //    mail.From = new MailAddress(sender_email);
+        //    mail.Body = messagebody;
+        //    mail.Subject = "Password Reset Code";
+        //    SmtpClient smtp = new SmtpClient("smtp.gmail.com");
+        //    smtp.EnableSsl = true;
+        //    smtp.Port = 587;
+        //    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+        //    smtp.Credentials = new NetworkCredential(sender_email, sender_email_application_password);
+        //    smtp.Send(mail);
+        //    return randomcode;
+
+        //}
+
+        public bool isEmailValid(string OTP,string UserOTP)
+        {
+            bool isValid = false;
+
+            if(OTP == UserOTP)
+            {
+                isValid = true;
+               
+            }
+
+            return isValid;
         }
 
     }

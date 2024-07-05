@@ -1,7 +1,12 @@
-﻿using MeroPartyPalace.Model;
+﻿using Dapper;
+using MeroPartyPalace.Constant;
+using MeroPartyPalace.Model;
 using MeroPartyPalace.Repository;
+using MeroPartyPalace.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace MeroPartyPalace.Controllers
 {
@@ -9,7 +14,7 @@ namespace MeroPartyPalace.Controllers
     [ApiController]
     public class VenueController : ControllerBase
     {
-        [HttpPost]
+        [HttpPost(Name ="Add_Venue")]
         public string addVenue(Venue venue)
         {
             VenueRepository venueRepository = new VenueRepository();
@@ -26,7 +31,8 @@ namespace MeroPartyPalace.Controllers
             }
 
         }
-        [HttpPut]
+        [HttpPost("Get_Venue")]
+
         public List<Venue> GetVenue(UserAddress userAddress, bool filterValues, int capacity)
         {
             VenueRepository venueRepo = new VenueRepository();
@@ -34,7 +40,19 @@ namespace MeroPartyPalace.Controllers
             List<Venue> venuedetails = venueRepo.getVenues(userAddress, filterValues, capacity);
 
             return venuedetails;
-                
+
+        }
+        [HttpPost("Update_Venue_Info")]
+
+        public string UpdateVenueInfo(Venue venue)
+        {
+            VenueRepository venueRepository = new VenueRepository();
+            bool success = venueRepository.UpdateVenue(venue);
+            if (success)
+            {
+                return ("Venue details Changed");
+            }
+            return ("Error Occured");
         }
 
     }

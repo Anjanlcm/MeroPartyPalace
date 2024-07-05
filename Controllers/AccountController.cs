@@ -11,6 +11,8 @@ using MeroPartyPalace.Service;
 using System.Reflection.Metadata.Ecma335;
 using MeroPartyPalace.Constant;
 using MeroPartyPalace.Repository;
+using System.Net.Mail;
+using System.Net;
 
 namespace MeroPartyPalace.Controllers
 {
@@ -18,8 +20,7 @@ namespace MeroPartyPalace.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        [HttpPost]
-        [Route("LoginUser")]
+        [HttpPost("Login_User")]
         public User LoginUser(LoginUser loginUser)
         {
             UserRepository userRepository = new UserRepository(); 
@@ -49,13 +50,20 @@ namespace MeroPartyPalace.Controllers
             return loggedInUser;
         }
 
-        [HttpPost]
+        [HttpPost("SignUp_User")]
         public string SignUpUser(User signUpUser)
         {
-            UserRepository userRepository = new UserRepository();
+            //string OTP = "";
 
-           int UserId = userRepository.SignUpUser(signUpUser);
-            if(UserId != null)
+            //string generatedOTP = "";
+            UserRepository userRepository = new UserRepository();
+            int UserId = userRepository.SignUpUser(signUpUser);
+            //generatedOTP = UserRepository.sendOTP(signUpUser.UserEmail, signUpUser.FirstName);
+            Console.WriteLine("Enter OTP");
+            //OTP = Console.ReadLine();
+            //userRepository.isEmailValid(generatedOTP, OTP);
+
+            if (UserId != null)
             {
                 return ("Successfully signed up");
             }
@@ -63,9 +71,9 @@ namespace MeroPartyPalace.Controllers
             {
                 return ("Error Occured");
             }
-            
+
         }
-        [HttpPut]
+        [HttpPost("Change_Password")]
         public string ChangePassword(LoginUser loginUser)
         {
             UserRepository userRepository = new UserRepository();
@@ -77,7 +85,7 @@ namespace MeroPartyPalace.Controllers
             return ("Error Occured");
         }
 
-        [HttpPatch]
+        [HttpPost("Update_User_Account_Info")]
         public string UpdateUserAccountInfo(User signUpUser)
         {
             UserRepository userRepository = new UserRepository();
@@ -88,7 +96,9 @@ namespace MeroPartyPalace.Controllers
             }
             return ("Error Occured");
         }
-       
+
+        
     }
+
 }
  
