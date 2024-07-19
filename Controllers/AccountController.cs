@@ -11,8 +11,7 @@ using MeroPartyPalace.Service;
 using System.Reflection.Metadata.Ecma335;
 using MeroPartyPalace.Constant;
 using MeroPartyPalace.Repository;
-using System.Net.Mail;
-using System.Net;
+
 
 namespace MeroPartyPalace.Controllers
 {
@@ -53,16 +52,14 @@ namespace MeroPartyPalace.Controllers
         [HttpPost("SignUp_User")]
         public string SignUpUser(User signUpUser)
         {
-            //string OTP = "";
-
-            //string generatedOTP = "";
             UserRepository userRepository = new UserRepository();
-            int UserId = userRepository.SignUpUser(signUpUser);
-            //generatedOTP = UserRepository.sendOTP(signUpUser.UserEmail, signUpUser.FirstName);
+            string OTP = "";
+            string generatedOTP = ""; 
+            userRepository.isEmailValid(generatedOTP, OTP);
+            generatedOTP = UserRepository.sendOtp(signUpUser.UserEmail, signUpUser.FirstName);
             Console.WriteLine("Enter OTP");
-            //OTP = Console.ReadLine();
-            //userRepository.isEmailValid(generatedOTP, OTP);
-
+            OTP = Console.ReadLine();
+            int UserId = userRepository.SignUpUser(signUpUser);
             if (UserId != null)
             {
                 return ("Successfully signed up");
