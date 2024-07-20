@@ -31,7 +31,7 @@ namespace MeroPartyPalace.Controllers
             }
 
         }
-        [HttpPost("Get_Venue")]
+        [HttpGet("Get_Venue")]
 
         public List<Venue> GetVenue(UserAddress userAddress, bool filterValues, int capacity)
         {

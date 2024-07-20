@@ -19,7 +19,7 @@ namespace MeroPartyPalace.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        [HttpPost("Login_User")]
+        [HttpGet("Login_User")]
         public User LoginUser(LoginUser loginUser)
         {
             UserRepository userRepository = new UserRepository(); 
@@ -55,10 +55,10 @@ namespace MeroPartyPalace.Controllers
             UserRepository userRepository = new UserRepository();
             string OTP = "";
             string generatedOTP = ""; 
-            userRepository.isEmailValid(generatedOTP, OTP);
             generatedOTP = UserRepository.sendOtp(signUpUser.UserEmail, signUpUser.FirstName);
             Console.WriteLine("Enter OTP");
             OTP = Console.ReadLine();
+            userRepository.isEmailValid(generatedOTP, OTP);
             int UserId = userRepository.SignUpUser(signUpUser);
             if (UserId != null)
             {
