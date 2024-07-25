@@ -121,9 +121,18 @@ namespace MeroPartyPalace.Controllers
             string OTP = "";
             string generatedOTP = "";
             generatedOTP = UserRepository.sendOtp(signUpUser.UserEmail, signUpUser.FirstName);
+            Console.WriteLine(generatedOTP);
             Console.WriteLine("Enter OTP");
             OTP = Console.ReadLine();
-            userRepository.isEmailValid(generatedOTP, OTP);
+            bool validOtp= userRepository.isEmailValid(generatedOTP, OTP);
+            if(!validOtp) 
+            {
+                return BadRequest(new { message = "Invalid Otp" });
+            }
+            if(generatedOTP == "")
+            {
+                return BadRequest(new { message = " Email does not exist." });
+            }
             int UserId = userRepository.SignUpUser(signUpUser);
 
             if (UserId != 0) // Assuming UserId != 0 indicates successful signup
