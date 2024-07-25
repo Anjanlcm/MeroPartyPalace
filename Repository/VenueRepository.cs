@@ -4,6 +4,8 @@ using MeroPartyPalace.Model;
 using MeroPartyPalace.Service;
 using System.Data;
 using System.Data.SqlClient;
+using System.Numerics;
+using System.Reflection.Metadata;
 using static Dapper.SqlMapper;
 
 namespace MeroPartyPalace.Repository
@@ -46,6 +48,36 @@ namespace MeroPartyPalace.Repository
             venues = sortVenues(venues, userAddress);
             return venues;
         }
+
+        //public bool AddImage(Venue venue)
+        //{
+        //    var imageString = "";
+        //    List<IFormFile> imageFiles = venue.Photos;
+        //    UtilityService utilityServices = new UtilityService();
+        //    if (imageFiles != null)
+        //    {
+        //        for (int i = 0; i < imageFiles.Count; i++)
+        //        {
+        //            imageString = utilityServices.ConvertImageToBase64(imageFiles);
+        //            DynamicParameters parameters = new DynamicParameters();
+        //            parameters.Add("@PhotoDetails", imageString);
+        //            parameters.Add("@VenueId", venue.VenueID);
+
+        //            using (var connection = new SqlConnection(DBConstant.ConnectionString))
+        //            {
+
+        //                var imageList = connection.Query<Venue>("spForInsertPhoto", parameters, commandType: CommandType.StoredProcedure).ToList();
+        //            }
+        //        }
+        //        return true;
+
+        //    }
+        //    else
+        //    {
+        //        return false;
+        //    }
+
+        //}
 
         public int addVenue(Venue venue)
         {

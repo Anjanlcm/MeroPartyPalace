@@ -48,6 +48,11 @@ namespace MeroPartyPalace.Service
         //}
         public int SignUpUser(User signUpUser)
         {
+            if (signUpUser == null)
+            {
+                return 0; // Return 0 if the input user is null
+            }
+
             UserRepository userRepository = new UserRepository();
             DynamicParameters dynamicParameter = new DynamicParameters();
             dynamicParameter.Add("firstName", signUpUser.FirstName);
@@ -63,20 +68,39 @@ namespace MeroPartyPalace.Service
             dynamicParameter.Add("roleId", signUpUser.RoleID);
             dynamicParameter.Add("Id", dbType: DbType.Int32, direction: ParameterDirection.Output);
 
-            using (var connection = new SqlConnection(DBConstant.ConnectionString))
+            try
             {
-                if(signUpUser != null)
+                using (var connection = new SqlConnection(DBConstant.ConnectionString))
                 {
+                    //if (signUpUser != null)
+                    // {
                     var SignUp = connection.Query<User>("spForInsertUser", dynamicParameter, commandType: CommandType.StoredProcedure).ToList();
                     var id = dynamicParameter.Get<int>("Id");
                     return id;
-                }
-                else
-                {
-                    return 0;
+                    //}
                 }
             }
+            catch (SqlException ex) when (ex.Number == 2627) // Unique Key Violation
+            {
+                // Handle unique key constraint violation
+                Console.WriteLine("A user with this email already exists: " + ex.Message);
+                return -1; // Return a specific value to indicate a duplicate entry
+            }
+            catch (SqlException ex)
+            {
+                // Handle other SQL exceptions
+                Console.WriteLine("SQL Error occurred: " + ex.Message);
+                return 0; // Return 0 to indicate a general error
+            }
+            catch (Exception ex)
+            {
+                // Handle non-SQL exceptions
+                Console.WriteLine("An error occurred: " + ex.Message);
+                return 0; // Return 0 to indicate an error
+            }
+
         }
+        
        
         public bool ChangePassword(LoginUser loginUser)
         {

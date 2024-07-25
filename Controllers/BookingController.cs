@@ -12,7 +12,7 @@ namespace MeroPartyPalace.Controllers
     [ApiController]
     public class BookingController : ControllerBase
     {
-        [HttpPost("Book Venue")]
+        [HttpGet("Book Venue")]
         public void BookVenue(Booking bookingVenue)
         {
             BookingRepository bookingRepository = new BookingRepository();

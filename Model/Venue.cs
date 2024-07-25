@@ -1,4 +1,6 @@
-﻿namespace MeroPartyPalace.Model
+﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
+
+namespace MeroPartyPalace.Model
 {
     public class Venue
     {
@@ -16,5 +18,6 @@
         public string Validate { get; set; }
         public string PhoneNumber { get; set; }
         public int Capacity { get; set; }
+        public  List<IFormFile> Photos { get; set; }
     }
 }
