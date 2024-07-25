@@ -11,6 +11,7 @@ using System.Net.Mail;
 using System.Net;
 using System.Net.Http;
 using System;
+using System.Text.RegularExpressions;
 
 namespace MeroPartyPalace.Service
 {
@@ -48,10 +49,13 @@ namespace MeroPartyPalace.Service
         //}
         public int SignUpUser(User signUpUser)
         {
+            
             if (signUpUser == null)
             {
                 return 0; // Return 0 if the input user is null
             }
+
+            signUpUser.RoleID = 1;
 
             UserRepository userRepository = new UserRepository();
             DynamicParameters dynamicParameter = new DynamicParameters();
@@ -137,6 +141,7 @@ namespace MeroPartyPalace.Service
             dynamicParameter.Add("City", signUpUser.Address_City);
             dynamicParameter.Add("mobileNumber", signUpUser.MobileNo);
             dynamicParameter.Add("roleId", signUpUser.RoleID);
+
             dynamicParameter.Add("RowsAffected", dbType: DbType.Int32, direction: ParameterDirection.Output);
 
             using (var connection = new SqlConnection(DBConstant.ConnectionString))
@@ -156,6 +161,7 @@ namespace MeroPartyPalace.Service
         }
         public static string sendOtp(string reciever_email, string username)
         {
+ 
             string randomcode, messagebody;
             Random rand = new Random();
             randomcode = (rand.Next(100000, 999999)).ToString();
@@ -163,15 +169,7 @@ namespace MeroPartyPalace.Service
             string sender_email_application_password = "bkag wezh mylv zurf";
             MailMessage mail = new MailMessage();
             messagebody = "Dear " + username + ",\n\nYour password reset code is: " + randomcode;
-            try
-            {
-                mail.To.Add(reciever_email);
-            }
-            catch (Exception ex)
-            {
-
-                return "invalid email";
-            }
+            mail.To.Add(reciever_email);
             mail.From = new MailAddress(sender_email);
             mail.Body = messagebody;
             mail.Subject = "password reset code";
@@ -180,13 +178,28 @@ namespace MeroPartyPalace.Service
             smtp.Port = 587;
             smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
             smtp.Credentials = new NetworkCredential(sender_email, sender_email_application_password);
-            smtp.Send(mail);
+
+
+            try
+            {
+                smtp.Send(mail);
+            }
+            catch (SmtpFailedRecipientException ex)
+            {
+                Console.WriteLine($"Email does not exit: {ex.Message}");
+                return "";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception: {ex.Message}");
+                return "";
+            }
             return randomcode;
 
         }
 
         public bool isEmailValid(string OTP, string UserOTP)
-        {
+                {
             bool isValid = false;
 
             if (OTP == UserOTP)

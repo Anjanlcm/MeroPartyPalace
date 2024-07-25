@@ -53,12 +53,12 @@ namespace MeroPartyPalace.Repository
         //{
         //    var imageString = "";
         //    List<IFormFile> imageFiles = venue.Photos;
-        //    UtilityService utilityServices = new UtilityService();
+        //    UtilityService utilityService = new UtilityService();
         //    if (imageFiles != null)
         //    {
         //        for (int i = 0; i < imageFiles.Count; i++)
         //        {
-        //            imageString = utilityServices.ConvertImageToBase64(imageFiles);
+        //            imageString = utilityService.ConvertImageToBase64Async(imageFiles);
         //            DynamicParameters parameters = new DynamicParameters();
         //            parameters.Add("@PhotoDetails", imageString);
         //            parameters.Add("@VenueId", venue.VenueID);
@@ -79,12 +79,51 @@ namespace MeroPartyPalace.Repository
 
         //}
 
+        //public async Task<bool> AddImageAsync(Venue venue)
+        //{
+        //    List<IFormFile> imageFiles = venue.Photos;
+        //    if (imageFiles == null || imageFiles.Count == 0)
+        //    {
+        //        return false; // No images to process
+        //    }
+
+        //    UtilityService utilityService = new UtilityService();
+        //    foreach (var imageFile in imageFiles)
+        //    {
+        //        try
+        //        {
+        //            // Convert each image to Base64 string
+        //            string imageString = await utilityService.ConvertImageToBase64Async(new List<IFormFile> { imageFile });
+
+        //            // Prepare parameters for the stored procedure
+        //            DynamicParameters parameters = new DynamicParameters();
+        //            parameters.Add("@PhotoDetails", imageString);
+        //            parameters.Add("@VenueId", venue.VenueID);
+
+        //            // Execute stored procedure
+        //            using (var connection = new SqlConnection(DBConstant.ConnectionString))
+        //            {
+        //                await connection.ExecuteAsync("spForInsertPhoto", parameters, commandType: CommandType.StoredProcedure);
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            // Log or handle the exception as needed
+        //            Console.WriteLine($"Error processing image: {ex.Message}");
+        //            // Optionally, return false or handle the error accordingly
+        //            return false;
+        //        }
+        //    }
+
+        //    return true;
+        //}
+
         public int addVenue(Venue venue)
         {
             VenueRepository venueRepository = new VenueRepository();
             DynamicParameters dynamicParameter = new DynamicParameters();
             dynamicParameter.Add("venueName", venue.VenueName);
-            dynamicParameter.Add("panNumber", venue.PAN_Number);
+            dynamicParameter.Add("panNumber", venue.PANnumber);
             dynamicParameter.Add("price", venue.Price);
             dynamicParameter.Add("venueStatus", venue.VenueStatus);
             dynamicParameter.Add("venueOwnerID", venue.VenueOwnerID);
@@ -93,7 +132,7 @@ namespace MeroPartyPalace.Repository
             dynamicParameter.Add("addressDistrict", venue.Address_District);
             dynamicParameter.Add("addressCity", venue.Address_City);
             dynamicParameter.Add("validate", venue.Validate);
-            dynamicParameter.Add("rating", venue.VenueRating);
+            dynamicParameter.Add("rating", venue.Rating);
             dynamicParameter.Add("phoneNumber", venue.PhoneNumber);
             dynamicParameter.Add("capacity", venue.Capacity);
             dynamicParameter.Add("Id", dbType: DbType.Int32, direction: ParameterDirection.Output);
@@ -161,7 +200,7 @@ namespace MeroPartyPalace.Repository
                 }
 
                 // Add venue rating to weight
-                weight += venue.VenueRating;
+                weight += venue.Rating;
 
                 // Add the venue and its weight to the list
                 venueWeights.Add((venue, weight));
@@ -180,19 +219,18 @@ namespace MeroPartyPalace.Repository
         public bool UpdateVenue(Venue updateVenue)
         {
             bool success = false;
-            VenueRepository userRepository = new VenueRepository();
             DynamicParameters dynamicParameter = new DynamicParameters();
             dynamicParameter.Add("VenueID", updateVenue.VenueID);
             dynamicParameter.Add("VenueName", updateVenue.VenueName);
             dynamicParameter.Add("Price", updateVenue.Price);
-            dynamicParameter.Add("PAN_Number", updateVenue.PAN_Number);
+            dynamicParameter.Add("PAN_Number", updateVenue.PANnumber);
             dynamicParameter.Add("VenueOwnerID", updateVenue.VenueOwnerID);
             dynamicParameter.Add("VenueStatus", updateVenue.VenueStatus);
             dynamicParameter.Add("VenueDescription", updateVenue.VenueDescription);
             dynamicParameter.Add("Address_Province", updateVenue.Address_Province);
             dynamicParameter.Add("Address_District", updateVenue.Address_District);
             dynamicParameter.Add("Address_City", updateVenue.Address_City);
-            dynamicParameter.Add("VenueRating", updateVenue.VenueRating);
+            dynamicParameter.Add("VenueRating", updateVenue.Rating);
             dynamicParameter.Add("Validate", updateVenue.Validate);
             dynamicParameter.Add("PhoneNumber", updateVenue.PhoneNumber);
             dynamicParameter.Add("Capacity", updateVenue.Capacity);
@@ -204,7 +242,6 @@ namespace MeroPartyPalace.Repository
                 {
                     var SignUp = connection.Query<User>("spForUpdateVenue", dynamicParameter, commandType: CommandType.StoredProcedure).ToList();
                     var rowCount = dynamicParameter.Get<int>("RowsAffected");
-                    Console.WriteLine($"{rowCount}");
                     if (rowCount > 0)
                     {
                         success = true;
@@ -213,5 +250,26 @@ namespace MeroPartyPalace.Repository
             }
             return success;
         }
+
+        public bool DeleteVenue(Venue Deletevenue)
+        {
+            bool isDeleted = false;
+            DynamicParameters dynamicParameter = new DynamicParameters();
+
+            dynamicParameter.Add("VenueID", Deletevenue.VenueID);
+            using (var connection = new SqlConnection(DBConstant.ConnectionString))
+            {
+
+                    var SignUp = connection.Query<User>("spForDeleteVenue", dynamicParameter, commandType: CommandType.StoredProcedure).ToList();
+                    var rowCount = dynamicParameter.Get<int>("RowsAffected");
+                    if (rowCount > 0)
+                    {
+                        isDeleted = true;
+                    }
+                return isDeleted;
+            }
+
+        }
+
     }
 }

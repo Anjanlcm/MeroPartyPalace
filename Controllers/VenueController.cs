@@ -18,7 +18,9 @@ namespace MeroPartyPalace.Controllers
         public string addVenue(Venue venue)
         {
             VenueRepository venueRepository = new VenueRepository();
+            //venueRepository.AddImageAsync(venue.Photos);
             int id = venueRepository.addVenue(venue);
+
 
             if (id != null)
             {
@@ -88,14 +90,14 @@ namespace MeroPartyPalace.Controllers
                     VenueID = venue.VenueID,
                     VenueName = venue.VenueName,
                     Price = venue.Price,
-                    PAN_Number = venue.PAN_Number,
+                    PANnumber = venue.PANnumber,
                     VenueOwnerID = venue.VenueOwnerID,
                     VenueStatus = venue.VenueStatus,
                     VenueDescription = venue.VenueDescription,
                     Address_Province = venue.Address_Province,
                     Address_District = venue.Address_District,
                     Address_City = venue.Address_City,
-                    VenueRating = venue.VenueRating,
+                    Rating = venue.Rating,
                     PhoneNumber = venue.PhoneNumber,
                     Capacity = venue.Capacity
                 });
@@ -104,7 +106,7 @@ namespace MeroPartyPalace.Controllers
             return Ok(venuedetail);
         }
     
-    [HttpPost("Update_Venue_Info")]
+        [HttpPost("Update_Venue_Info")]
 
         public string UpdateVenueInfo(Venue venue)
         {
@@ -117,5 +119,12 @@ namespace MeroPartyPalace.Controllers
             return ("Error Occured");
         }
 
+        [HttpPost("Delete Venue")]
+
+        public IActionResult DeleteVenue(Venue venue)
+        {
+
+            return Ok(new { message = "Successfully Deleted" });
+        }
     }
 }
