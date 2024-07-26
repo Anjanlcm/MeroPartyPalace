@@ -15,24 +15,89 @@ namespace MeroPartyPalace.Controllers
     public class VenueController : ControllerBase
     {
         [HttpPost("Add Venue")]
-        public string addVenue(Venue venue)
+
+        public IActionResult AddVenue([FromBody] Venue venue)
         {
-            VenueRepository venueRepository = new VenueRepository();
-            //venueRepository.AddImageAsync(venue.Photos);
-            int id = venueRepository.addVenue(venue);
-
-
-            if (id != null)
+            if (venue == null)
             {
-                return ("Added venue successfully");
+                return BadRequest("Venue data is null.");
+            }
+
+            VenueResponse response = AddVenueToDatabase(venue);
+
+            if (response.VenueID > 0)
+            {
+                return Ok(response);
             }
             else
             {
-                return ("Added venue Unsuccessfully");
-
+                return StatusCode(500, response.Message);
             }
-
         }
+
+        private VenueResponse AddVenueToDatabase(Venue venue)
+        {
+            VenueRepository venueRepository = new VenueRepository();
+            DynamicParameters dynamicParameter = new DynamicParameters();
+            dynamicParameter.Add("venueName", venue.VenueName);
+            dynamicParameter.Add("panNumber", venue.PANnumber);
+            dynamicParameter.Add("price", venue.Price);
+            dynamicParameter.Add("venueStatus", venue.VenueStatus);
+            dynamicParameter.Add("venueOwnerID", venue.VenueOwnerID);
+            dynamicParameter.Add("venueDescription", venue.VenueDescription);
+            dynamicParameter.Add("addressProvince", venue.Address_Province);
+            dynamicParameter.Add("addressDistrict", venue.Address_District);
+            dynamicParameter.Add("addressCity", venue.Address_City);
+            dynamicParameter.Add("validate", venue.Validate);
+            dynamicParameter.Add("rating", venue.Rating);
+            dynamicParameter.Add("phoneNumber", venue.PhoneNumber);
+            dynamicParameter.Add("capacity", venue.Capacity);
+            dynamicParameter.Add("Id", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+            using (var connection = new SqlConnection(DBConstant.ConnectionString))
+            {
+                if (venue != null)
+                {
+                    // Add venue to database
+                    connection.Execute("spForInsertVenue", dynamicParameter, commandType: CommandType.StoredProcedure);
+                    var id = dynamicParameter.Get<int>("Id");
+
+                    if (id > 0)
+                    {
+                        // Add images to database
+                        bool isImageAdded = venueRepository.AddImage(id, venue.Photos);
+
+                        return new VenueResponse
+                        {
+                            VenueID = id,
+                            IsImageAdded = isImageAdded,
+                            Message = isImageAdded ? "Venue and images added successfully" : "Venue added, but images addition failed"
+                        };
+                    }
+                    else
+                    {
+                        return new VenueResponse
+                        {
+                            VenueID = 0,
+                            IsImageAdded = false,
+                            Message = "Failed to add venue"
+                        };
+                    }
+                }
+                else
+                {
+                    return new VenueResponse
+                    {
+                        VenueID = 0,
+                        IsImageAdded = false,
+                        Message = "Venue is null"
+                    };
+                }
+            }
+        }
+
+
+
         [HttpGet("Get_Venue")]
         public IActionResult GetVenue([FromQuery] string province, [FromQuery] string district, [FromQuery] string city, [FromQuery] bool filterValues, [FromQuery] int capacity)
         {
