@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Numerics;
 using System.Reflection.Metadata;
+using System.Web.Http;
 using static Dapper.SqlMapper;
 
 namespace MeroPartyPalace.Repository
@@ -49,6 +50,24 @@ namespace MeroPartyPalace.Repository
             return venues;
         }
 
+        public Venue GetVenueByID(int id)
+        {
+            Venue venue = null;
+
+            using (var connection = new SqlConnection(DBConstant.ConnectionString))
+            {
+                // Define the parameters for the stored procedure or SQL query
+                var parameters = new DynamicParameters();
+                parameters.Add("VenueID", id);
+
+                // Query the database to get the venue details by ID
+                venue = connection.QueryFirstOrDefault<Venue>("spForGetVenueByID", parameters, commandType: CommandType.StoredProcedure);
+            }
+
+            return venue;
+        }
+
+
         //public bool AddImage(Venue venue)
         //{
         //    var imageString = "";
@@ -58,7 +77,7 @@ namespace MeroPartyPalace.Repository
         //    {
         //        for (int i = 0; i < imageFiles.Count; i++)
         //        {
-        //            imageString = utilityService.ConvertImageToBase64Async(imageFiles);
+        //            imageString = utilityService.ConvertImageToBase64(imageFiles);
         //            DynamicParameters parameters = new DynamicParameters();
         //            parameters.Add("@PhotoDetails", imageString);
         //            parameters.Add("@VenueId", venue.VenueID);
@@ -79,82 +98,74 @@ namespace MeroPartyPalace.Repository
 
         //}
 
-        //public async Task<bool> AddImageAsync(Venue venue)
-        //{
-        //    List<IFormFile> imageFiles = venue.Photos;
-        //    if (imageFiles == null || imageFiles.Count == 0)
-        //    {
-        //        return false; // No images to process
-        //    }
 
-        //    UtilityService utilityService = new UtilityService();
-        //    foreach (var imageFile in imageFiles)
-        //    {
-        //        try
-        //        {
-        //            // Convert each image to Base64 string
-        //            string imageString = await utilityService.ConvertImageToBase64Async(new List<IFormFile> { imageFile });
-
-        //            // Prepare parameters for the stored procedure
-        //            DynamicParameters parameters = new DynamicParameters();
-        //            parameters.Add("@PhotoDetails", imageString);
-        //            parameters.Add("@VenueId", venue.VenueID);
-
-        //            // Execute stored procedure
-        //            using (var connection = new SqlConnection(DBConstant.ConnectionString))
-        //            {
-        //                await connection.ExecuteAsync("spForInsertPhoto", parameters, commandType: CommandType.StoredProcedure);
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            // Log or handle the exception as needed
-        //            Console.WriteLine($"Error processing image: {ex.Message}");
-        //            // Optionally, return false or handle the error accordingly
-        //            return false;
-        //        }
-        //    }
-
-        //    return true;
-        //}
-
-        public int addVenue(Venue venue)
+        public bool AddImage(int venueID, List<string> photos)
         {
-            VenueRepository venueRepository = new VenueRepository();
-            DynamicParameters dynamicParameter = new DynamicParameters();
-            dynamicParameter.Add("venueName", venue.VenueName);
-            dynamicParameter.Add("panNumber", venue.PANnumber);
-            dynamicParameter.Add("price", venue.Price);
-            dynamicParameter.Add("venueStatus", venue.VenueStatus);
-            dynamicParameter.Add("venueOwnerID", venue.VenueOwnerID);
-            dynamicParameter.Add("venueDescription", venue.VenueDescription);
-            dynamicParameter.Add("addressProvince", venue.Address_Province);
-            dynamicParameter.Add("addressDistrict", venue.Address_District);
-            dynamicParameter.Add("addressCity", venue.Address_City);
-            dynamicParameter.Add("validate", venue.Validate);
-            dynamicParameter.Add("rating", venue.Rating);
-            dynamicParameter.Add("phoneNumber", venue.PhoneNumber);
-            dynamicParameter.Add("capacity", venue.Capacity);
-            dynamicParameter.Add("Id", dbType: DbType.Int32, direction: ParameterDirection.Output);
-
             using (var connection = new SqlConnection(DBConstant.ConnectionString))
             {
-                if (venue != null)
+                foreach (var photo in photos)
                 {
-                    //Add venue to database
-                    var AddVenue = connection.Query<User>("spForInsertVenue", dynamicParameter, commandType: CommandType.StoredProcedure).ToList();
-                    var id = dynamicParameter.Get<int>("Id");
-                    return id;
+                    DynamicParameters dynamicParameters = new DynamicParameters();
+                    dynamicParameters.Add("venueID", venueID);
+                    dynamicParameters.Add("imageData", photo);
+                    dynamicParameters.Add("imageType", "image/png"); // Assuming PNG, change if necessary
 
+                    var result = connection.Execute("spForInsertPhoto", dynamicParameters, commandType: CommandType.StoredProcedure);
+                    if (result <= 0)
+                    {
+                        return false; // If any image insert fails, return false
+                    }
                 }
-                else
-                {
-                    return 0;
-                }
-
+                return true;
             }
-
         }
+
+        //public int addVenue(Venue venue)
+        //{
+        //    VenueRepository venueRepository = new VenueRepository();
+        //    DynamicParameters dynamicParameter = new DynamicParameters();
+        //    dynamicParameter.Add("venueName", venue.VenueName);
+        //    dynamicParameter.Add("panNumber", venue.PANnumber);
+        //    dynamicParameter.Add("price", venue.Price);
+        //    dynamicParameter.Add("venueStatus", venue.VenueStatus);
+        //    dynamicParameter.Add("venueOwnerID", venue.VenueOwnerID);
+        //    dynamicParameter.Add("venueDescription", venue.VenueDescription);
+        //    dynamicParameter.Add("addressProvince", venue.Address_Province);
+        //    dynamicParameter.Add("addressDistrict", venue.Address_District);
+        //    dynamicParameter.Add("addressCity", venue.Address_City);
+        //    dynamicParameter.Add("validate", venue.Validate);
+        //    dynamicParameter.Add("rating", venue.Rating);
+        //    dynamicParameter.Add("phoneNumber", venue.PhoneNumber);
+        //    dynamicParameter.Add("capacity", venue.Capacity);
+        //    dynamicParameter.Add("Id", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+        //    using (var connection = new SqlConnection(DBConstant.ConnectionString))
+        //    {
+        //        if (venue != null)
+        //        {
+        //            //Add venue to database
+        //            var AddVenue = connection.Query<User>("spForInsertVenue", dynamicParameter, commandType: CommandType.StoredProcedure).ToList();
+        //            var id = dynamicParameter.Get<int>("Id");
+        //            bool isImageAdded = venueRepository.AddImage(venue);
+        //           if (isImageAdded) 
+        //            {
+        //                return id; 
+        //            }
+        //            else 
+        //            { 
+        //                return 0; 
+        //            }
+
+        //        }
+        //        else
+        //        {
+        //            return 0;
+        //        }
+
+
+        //    }
+
+        //}
 
         public bool editVenue(Venue venue)
         {
@@ -200,7 +211,7 @@ namespace MeroPartyPalace.Repository
                 }
 
                 // Add venue rating to weight
-                weight += venue.Rating;
+                weight += (venue.Rating);
 
                 // Add the venue and its weight to the list
                 venueWeights.Add((venue, weight));

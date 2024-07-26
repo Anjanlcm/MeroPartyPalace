@@ -1,5 +1,6 @@
 C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\CollegeSecondProject\MeroPartyPalace\bin\Debug\net6.0\appsettings.Development.json
 C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\CollegeSecondProject\MeroPartyPalace\bin\Debug\net6.0\appsettings.json
+C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\CollegeSecondProject\MeroPartyPalace\bin\Debug\net6.0\libman.json
 C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\CollegeSecondProject\MeroPartyPalace\bin\Debug\net6.0\MeroPartyPalace.exe
 C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\CollegeSecondProject\MeroPartyPalace\bin\Debug\net6.0\MeroPartyPalace.deps.json
 C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\CollegeSecondProject\MeroPartyPalace\bin\Debug\net6.0\MeroPartyPalace.runtimeconfig.json
@@ -9,6 +10,7 @@ C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\Colleg
 C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\CollegeSecondProject\MeroPartyPalace\bin\Debug\net6.0\System.Net.Http.Formatting.dll
 C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\CollegeSecondProject\MeroPartyPalace\bin\Debug\net6.0\System.Web.Http.dll
 C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\CollegeSecondProject\MeroPartyPalace\bin\Debug\net6.0\Microsoft.OpenApi.dll
+C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\CollegeSecondProject\MeroPartyPalace\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
 C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\CollegeSecondProject\MeroPartyPalace\bin\Debug\net6.0\Newtonsoft.Json.dll
 C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\CollegeSecondProject\MeroPartyPalace\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll
 C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\CollegeSecondProject\MeroPartyPalace\bin\Debug\net6.0\SixLabors.ImageSharp.dll
@@ -16,6 +18,8 @@ C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\Colleg
 C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\CollegeSecondProject\MeroPartyPalace\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\CollegeSecondProject\MeroPartyPalace\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\CollegeSecondProject\MeroPartyPalace\bin\Debug\net6.0\System.Data.SqlClient.dll
+C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\CollegeSecondProject\MeroPartyPalace\bin\Debug\net6.0\System.Drawing.Common.dll
+C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\CollegeSecondProject\MeroPartyPalace\bin\Debug\net6.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
 C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\CollegeSecondProject\MeroPartyPalace\bin\Debug\net6.0\runtimes\win-arm64\native\sni.dll
 C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\CollegeSecondProject\MeroPartyPalace\bin\Debug\net6.0\runtimes\win-x64\native\sni.dll
 C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\CollegeSecondProject\MeroPartyPalace\bin\Debug\net6.0\runtimes\win-x86\native\sni.dll

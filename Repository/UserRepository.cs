@@ -35,6 +35,7 @@ namespace MeroPartyPalace.Service
 
 
         }
+
         //public string GetUserById()
         //{
         //    using (var connection = new SqlConnection(Constant.ConnectionString))
