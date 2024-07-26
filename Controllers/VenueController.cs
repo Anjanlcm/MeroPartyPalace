@@ -34,40 +34,6 @@ namespace MeroPartyPalace.Controllers
 
         }
         [HttpGet("Get_Venue")]
-
-        //public IActionResult GetVenue(UserAddress userAddress, bool filterValues, int capacity)
-        //{
-        //    VenueRepository venueRepo = new VenueRepository();
-
-        //    List<Venue> venuedetails = venueRepo.getVenues(userAddress, filterValues, capacity);
-        //    List<Venue> venuedetail = new List<Venue>();
-        //   int i = 0;
-        //    venuedetails.ForEach(venue => {
-        //        venuedetail[i] = new Venue
-        //        {
-        //            VenueID = venue.VenueID,
-        //            VenueName = venue.VenueName,
-        //            Price = venue.Price,
-        //            PAN_Number = venue.PAN_Number,
-        //            VenueOwnerID = venue.VenueOwnerID,
-        //            VenueStatus = venue.VenueStatus,
-        //            VenueDescription = venue.VenueDescription,
-        //            Address_Province = venue.Address_Province,
-        //            Address_District = venue.Address_District,
-        //            Address_City = venue.Address_City,
-        //            VenueRating = venue.VenueRating,
-        //            PhoneNumber = venue.PhoneNumber,
-        //            Capacity = venue.Capacity
-
-        //        };
-        //        i++;
-        //    });
-
-
-        //    return Ok(venuedetail);
-
-        //}
-
         public IActionResult GetVenue([FromQuery] string province, [FromQuery] string district, [FromQuery] string city, [FromQuery] bool filterValues, [FromQuery] int capacity)
         {
             UserAddress userAddress = new UserAddress
@@ -105,7 +71,27 @@ namespace MeroPartyPalace.Controllers
 
             return Ok(venuedetail);
         }
-    
+
+        [HttpGet("Get_VenueByID/{id}")]
+        public IActionResult GetVenueByVenueID(int id)
+        {
+            // Create an instance of VenueRepository
+            VenueRepository venueRepo = new VenueRepository();
+
+            // Fetch venue details from the repository by ID
+            Venue venue = venueRepo.GetVenueByID(id);
+
+            // Check if the venue was found
+            if (venue == null)
+            {
+                return NotFound(); // Return a 404 status if venue not found
+            }
+
+            return Ok(venue); // Return the venue details with a 200 status
+        }
+
+
+
         [HttpPost("Update_Venue_Info")]
 
         public string UpdateVenueInfo(Venue venue)

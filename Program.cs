@@ -1,7 +1,4 @@
-//using MeroPartyPalace.Services;
-//using Microsoft.AspNetCore.Http;
-//using Microsoft.AspNetCore.Mvc;
-
+using MeroPartyPalace.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +15,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddDistributedMemoryCache();
 
+
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromSeconds(10);
@@ -29,6 +27,8 @@ builder.Services.AddSession(options =>
 //builder.Services.AddTransient<emailSender, EmailSender>();
 
 builder.Services.AddControllers();
+builder.Services.AddTransient<eSewaPaymentService>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

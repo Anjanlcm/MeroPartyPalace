@@ -18,6 +18,6 @@ namespace MeroPartyPalace.Model
         public string Validate { get; set; }
         public string PhoneNumber { get; set; }
         public int Capacity { get; set; }
-        public  List<IFormFile> Photos { get; set; }
+        public List<IFormFile> Photos { get; set; }
     }
 }

@@ -42,3 +42,7 @@ C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\Colleg
 C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\CollegeSecondProject\MeroPartyPalace\obj\Debug\net6.0\MeroPartyPalace.pdb
 C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\CollegeSecondProject\MeroPartyPalace\obj\Debug\net6.0\MeroPartyPalace.genruntimeconfig.cache
 C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\CollegeSecondProject\MeroPartyPalace\obj\Debug\net6.0\ref\MeroPartyPalace.dll
+C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\CollegeSecondProject\MeroPartyPalace\bin\Debug\net6.0\libman.json
+C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\CollegeSecondProject\MeroPartyPalace\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\CollegeSecondProject\MeroPartyPalace\bin\Debug\net6.0\System.Drawing.Common.dll
+C:\Users\98454\OneDrive - Nepal College of Information Technology\Desktop\CollegeSecondProject\MeroPartyPalace\bin\Debug\net6.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll

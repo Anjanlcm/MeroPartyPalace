@@ -1,52 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Formats;
+﻿using System.Drawing;
 
 namespace MeroPartyPalace.Service
 {
     public class UtilityService
     {
-        public async Task<string> ConvertImageToBase64Async(List<IFormFile> imageFiles)
+        public string ConvertImageToBase64(List<IFormFile> imageFiles)
         {
             if (imageFiles == null || imageFiles.Count == 0)
             {
-                throw new ArgumentException("No files provided.");
+                throw new ArgumentException("The provided file is invalid.");
             }
-
             var imageFile = imageFiles[0];
-            if (imageFile.Length == 0)
+            using (var stream = new MemoryStream())
             {
-                throw new ArgumentException("The file is empty.");
-            }
-
-            try
-            {
-                using (var stream = new MemoryStream())
+                imageFile.CopyTo(stream);
+                //stream.Seek(0, SeekOrigin.Begin);
+                using (Image image = Image.FromStream(stream))
                 {
-                    await imageFile.CopyToAsync(stream);
-                    stream.Position = 0; // Ensure the stream is at the beginning
-
-                    using (var image = Image.Load(stream)) // Use ImageSharp's Image.Load method
+                    using (var memoryStream = new MemoryStream())
                     {
-                        using (var memoryStream = new MemoryStream())
-                        {
-                            var encoder = new SixLabors.ImageSharp.Formats.Jpeg.JpegEncoder(); // Choose appropriate encoder based on file type
-                            image.Save(memoryStream, encoder); // Save image to memory stream with encoder
-                            byte[] imageBytes = memoryStream.ToArray();
-                            return Convert.ToBase64String(imageBytes);
-                        }
+                        image.Save(memoryStream, image.RawFormat);
+                        byte[] imageBytes = memoryStream.ToArray();
+
+                        // Convert byte[] to Base64 string
+                        string imageString = Convert.ToBase64String(imageBytes);
+                        return imageString;
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                // Log or handle the exception as needed
-                throw new InvalidOperationException("Error processing the image file.", ex);
             }
         }
     }

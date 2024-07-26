@@ -49,74 +49,53 @@ namespace MeroPartyPalace.Repository
             return venues;
         }
 
-        //public bool AddImage(Venue venue)
-        //{
-        //    var imageString = "";
-        //    List<IFormFile> imageFiles = venue.Photos;
-        //    UtilityService utilityService = new UtilityService();
-        //    if (imageFiles != null)
-        //    {
-        //        for (int i = 0; i < imageFiles.Count; i++)
-        //        {
-        //            imageString = utilityService.ConvertImageToBase64Async(imageFiles);
-        //            DynamicParameters parameters = new DynamicParameters();
-        //            parameters.Add("@PhotoDetails", imageString);
-        //            parameters.Add("@VenueId", venue.VenueID);
+        public Venue GetVenueByID(int id)
+        {
+            Venue venue = null;
 
-        //            using (var connection = new SqlConnection(DBConstant.ConnectionString))
-        //            {
+            using (var connection = new SqlConnection(DBConstant.ConnectionString))
+            {
+                // Define the parameters for the stored procedure or SQL query
+                var parameters = new DynamicParameters();
+                parameters.Add("VenueID", id);
 
-        //                var imageList = connection.Query<Venue>("spForInsertPhoto", parameters, commandType: CommandType.StoredProcedure).ToList();
-        //            }
-        //        }
-        //        return true;
+                // Query the database to get the venue details by ID
+                venue = connection.QueryFirstOrDefault<Venue>("spForGetVenueByID", parameters, commandType: CommandType.StoredProcedure);
+            }
 
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
+            return venue;
+        }
 
-        //}
 
-        //public async Task<bool> AddImageAsync(Venue venue)
-        //{
-        //    List<IFormFile> imageFiles = venue.Photos;
-        //    if (imageFiles == null || imageFiles.Count == 0)
-        //    {
-        //        return false; // No images to process
-        //    }
+        public bool AddImage(Venue venue)
+        {
+            var imageString = "";
+            List<IFormFile> imageFiles = venue.Photos;
+            UtilityService utilityService = new UtilityService();
+            if (imageFiles != null)
+            {
+                for (int i = 0; i < imageFiles.Count; i++)
+                {
+                    imageString = utilityService.ConvertImageToBase64(imageFiles);
+                    DynamicParameters parameters = new DynamicParameters();
+                    parameters.Add("@PhotoDetails", imageString);
+                    parameters.Add("@VenueId", venue.VenueID);
 
-        //    UtilityService utilityService = new UtilityService();
-        //    foreach (var imageFile in imageFiles)
-        //    {
-        //        try
-        //        {
-        //            // Convert each image to Base64 string
-        //            string imageString = await utilityService.ConvertImageToBase64Async(new List<IFormFile> { imageFile });
+                    using (var connection = new SqlConnection(DBConstant.ConnectionString))
+                    {
 
-        //            // Prepare parameters for the stored procedure
-        //            DynamicParameters parameters = new DynamicParameters();
-        //            parameters.Add("@PhotoDetails", imageString);
-        //            parameters.Add("@VenueId", venue.VenueID);
+                        var imageList = connection.Query<Venue>("spForInsertPhoto", parameters, commandType: CommandType.StoredProcedure).ToList();
+                    }
+                }
+                return true;
 
-        //            // Execute stored procedure
-        //            using (var connection = new SqlConnection(DBConstant.ConnectionString))
-        //            {
-        //                await connection.ExecuteAsync("spForInsertPhoto", parameters, commandType: CommandType.StoredProcedure);
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            // Log or handle the exception as needed
-        //            Console.WriteLine($"Error processing image: {ex.Message}");
-        //            // Optionally, return false or handle the error accordingly
-        //            return false;
-        //        }
-        //    }
+            }
+            else
+            {
+                return false;
+            }
 
-        //    return true;
-        //}
+        }
 
         public int addVenue(Venue venue)
         {
@@ -144,13 +123,22 @@ namespace MeroPartyPalace.Repository
                     //Add venue to database
                     var AddVenue = connection.Query<User>("spForInsertVenue", dynamicParameter, commandType: CommandType.StoredProcedure).ToList();
                     var id = dynamicParameter.Get<int>("Id");
-                    return id;
+                    bool isImageAdded = venueRepository.AddImage(venue);
+                   if (isImageAdded) 
+                    {
+                        return id; 
+                    }
+                    else 
+                    { 
+                        return 0; 
+                    }
 
                 }
                 else
                 {
                     return 0;
                 }
+
 
             }
 
