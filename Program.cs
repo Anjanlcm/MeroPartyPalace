@@ -23,6 +23,17 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+builder.Services.AddDistributedMemoryCache(); //It allows us to store objects in memory
+
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(5);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+
 // Add services to the container.
 //builder.Services.AddTransient<emailSender, EmailSender>();
 
