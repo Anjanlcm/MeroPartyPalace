@@ -1,16 +1,11 @@
-﻿using MeroPartyPalace.Model;
-using Microsoft.AspNetCore.Http;
+﻿using Dapper;
+using MeroPartyPalace.Constant;
+using MeroPartyPalace.Model;
+using MeroPartyPalace.Service;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Data.SqlClient;
-using System.Data.SqlTypes;
-using Dapper;
 using static Dapper.SqlMapper;
-using System.Web.Http.Results;
-using MeroPartyPalace.Service;
-using System.Reflection.Metadata.Ecma335;
-using MeroPartyPalace.Constant;
-using MeroPartyPalace.Repository;
 
 namespace MeroPartyPalace.Controllers
 {
@@ -27,20 +22,17 @@ namespace MeroPartyPalace.Controllers
             {
                 UserRepository userRepository = new UserRepository();
                 int userId = userRepository.LoginUser(loginUser);
-
                 if (userId != 0)
                 {
                     using (var connection = new SqlConnection(DBConstant.ConnectionString))
                     {
                         DynamicParameters dynamicParameters = new DynamicParameters();
                         dynamicParameters.Add("id", userId);
-
                         var loggedInUser = (await connection.QueryAsync<User>(
                             "spForGetUserById",
                             dynamicParameters,
                             commandType: CommandType.StoredProcedure
                         )).FirstOrDefault();
-
                         if (loggedInUser != null)
                         {
                             var userData = new
@@ -56,12 +48,10 @@ namespace MeroPartyPalace.Controllers
                                 loggedInUser.MobileNo,
                                 loggedInUser.RoleID
                             };
-
                             return Ok(new { success = true, user = userData });
                         }
                     }
                 }
-
                 return Unauthorized(new { success = false, message = "Login Unsuccessful" });
             }
             catch (Exception ex)
@@ -71,28 +61,73 @@ namespace MeroPartyPalace.Controllers
             }
         }
 
+       // [HttpPost("SignUp_User")]
+
+        // this is the previous code ========================================================================
+
+
+        //public IActionResult SignUpUser(User signUpUser)
+        //{
+        //    UserRepository userRepository = new UserRepository();
+        //    string OTP = "";
+        //    string generatedOTP = "";
+        //    generatedOTP = UserRepository.sendOtp(signUpUser.UserEmail, signUpUser.FirstName);
+        //    Console.WriteLine(generatedOTP);
+        //    Console.WriteLine("Enter OTP");
+        //    OTP = Console.ReadLine();
+        //    bool validOtp = userRepository.isEmailValid(generatedOTP, OTP);
+        //    if (!validOtp)
+        //    {
+        //        return BadRequest(new { message = "Invalid Otp" });
+        //    }
+        //    if (generatedOTP == "")
+        //    {
+        //        return BadRequest(new { message = " Email does not exist." });
+        //    }
+        //    int UserId = userRepository.SignUpUser(signUpUser);
+        //    if (UserId != 0) // Assuming UserId != 0 indicates successful signup
+        //    {
+        //        return Ok(new { message = "Successfully signed up" });
+        //    }
+        //    else
+        //    {
+        //        return BadRequest(new { message = "Error Occurred" });
+        //    }
+        //}
+
+        //     up to here ==================================================
+
+
+// ============================================from here the code is generated ============================================================
+
         [HttpPost("SignUp_User")]
-        public IActionResult SignUpUser(User signUpUser)
+        public IActionResult SignUpUser([FromBody] User signUpUser)
         {
             UserRepository userRepository = new UserRepository();
-            string OTP = "";
-            string generatedOTP = "";
-            generatedOTP = UserRepository.sendOtp(signUpUser.UserEmail, signUpUser.FirstName);
-            Console.WriteLine(generatedOTP);
-            Console.WriteLine("Enter OTP");
-            OTP = Console.ReadLine();
-            bool validOtp= userRepository.isEmailValid(generatedOTP, OTP);
-            if(!validOtp) 
-            {
-                return BadRequest(new { message = "Invalid Otp" });
-            }
-            if(generatedOTP == "")
-            {
-                return BadRequest(new { message = " Email does not exist." });
-            }
-            int UserId = userRepository.SignUpUser(signUpUser);
+            string generatedOTP = UserRepository.sendOtp(signUpUser.UserEmail, signUpUser.FirstName);
 
-            if (UserId != 0) // Assuming UserId != 0 indicates successful signup
+            if (string.IsNullOrEmpty(generatedOTP))
+            {
+                return BadRequest(new { message = "Email does not exist." });
+            }
+
+            // Return the OTP for testing purposes (you wouldn't do this in production)
+            return Ok(new { message = "OTP sent to email.", otp = generatedOTP, user = signUpUser });
+        }
+
+        [HttpPost("Verify_Otp")]
+        public IActionResult VerifyOtp([FromBody] OtpVerificationModel otpVerification)
+        {
+            UserRepository userRepository = new UserRepository();
+            bool validOtp = userRepository.isEmailValid(otpVerification.GeneratedOtp, otpVerification.EnteredOtp);
+
+            if (!validOtp)
+            {
+                return BadRequest(new { message = "Invalid OTP" });
+            }
+
+            int userId = userRepository.SignUpUser(otpVerification.User);
+            if (userId != 0)
             {
                 return Ok(new { message = "Successfully signed up" });
             }
@@ -101,6 +136,24 @@ namespace MeroPartyPalace.Controllers
                 return BadRequest(new { message = "Error Occurred" });
             }
         }
+
+
+        public class OtpVerificationModel
+        {
+            public string GeneratedOtp { get; set; }
+            public string EnteredOtp { get; set; }
+            public User User { get; set; }
+        }
+
+
+
+
+//  ================================================  otp logic ====================================================
+
+
+
+
+
 
 
         [HttpPost("Change_Password")]
